@@ -36,10 +36,7 @@ async def generate_image(prompt: str, api_key: str, base_url: str):
 
 
 def extract_dimensions(url: str):
-    # Regular expression to match numbers in the format '300x200'
-    matches = re.findall(r"(\d+)x(\d+)", url)
-
-    if matches:
+    if matches := re.findall(r"(\d+)x(\d+)", url):
         width, height = matches[0]  # Extract the first match
         width = int(width)
         height = int(height)
@@ -52,12 +49,11 @@ def create_alt_url_mapping(code: str) -> Dict[str, str]:
     soup = BeautifulSoup(code, "html.parser")
     images = soup.find_all("img")
 
-    mapping: Dict[str, str] = {}
-
-    for image in images:
-        if not image["src"].startswith("https://placehold.co"):
-            mapping[image["alt"]] = image["src"]
-
+    mapping: Dict[str, str] = {
+        image["alt"]: image["src"]
+        for image in images
+        if not image["src"].startswith("https://placehold.co")
+    }
     return mapping
 
 
@@ -68,17 +64,14 @@ async def generate_images(
     soup = BeautifulSoup(code, "html.parser")
     images = soup.find_all("img")
 
-    # Extract alt texts as image prompts
-    alts = []
-    for img in images:
-        # Only include URL if the image starts with https://placehold.co
-        # and it's not already in the image_cache
+    alts = [
+        img.get("alt", None)
+        for img in images
         if (
             img["src"].startswith("https://placehold.co")
             and image_cache.get(img.get("alt")) is None
-        ):
-            alts.append(img.get("alt", None))
-
+        )
+    ]
     # Exclude images with no alt text
     alts = [alt for alt in alts if alt is not None]
 
@@ -86,7 +79,7 @@ async def generate_images(
     prompts = list(set(alts))
 
     # Return early if there are no images to replace
-    if len(prompts) == 0:
+    if not prompts:
         return code
 
     # Generate images
@@ -96,7 +89,7 @@ async def generate_images(
     mapped_image_urls = dict(zip(prompts, results))
 
     # Merge with image_cache
-    mapped_image_urls = {**mapped_image_urls, **image_cache}
+    mapped_image_urls = mapped_image_urls | image_cache
 
     # Replace old image URLs with the generated URLs
     for img in images:
@@ -104,9 +97,7 @@ async def generate_images(
         if not img["src"].startswith("https://placehold.co"):
             continue
 
-        new_url = mapped_image_urls[img.get("alt")]
-
-        if new_url:
+        if new_url := mapped_image_urls[img.get("alt")]:
             # Set width and height attributes
             width, height = extract_dimensions(img["src"])
             img["width"] = width

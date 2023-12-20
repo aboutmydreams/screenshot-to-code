@@ -17,11 +17,10 @@ def truncate_data_strings(data: List[ChatCompletionMessageParam]):  # type: igno
             # Recursively call the function if the value is a dictionary or a list
             if isinstance(value, (dict, list)):
                 cloned_data[key] = truncate_data_strings(value)  # type: ignore
-            # Truncate the string if it it's long and add ellipsis and length
             elif isinstance(value, str):
                 cloned_data[key] = value[:40]  # type: ignore
                 if len(value) > 40:
-                    cloned_data[key] += "..." + f" ({len(value)} chars)"  # type: ignore
+                    cloned_data[key] += f"... ({len(value)} chars)"
 
     elif isinstance(cloned_data, list):  # type: ignore
         # Process each item in the list

@@ -31,23 +31,23 @@ def assemble_imported_code_prompt(
     code: str, stack: str, result_image_data_url: Union[str, None] = None
 ) -> List[ChatCompletionMessageParam]:
     system_content = IMPORTED_CODE_TAILWIND_SYSTEM_PROMPT
-    if stack == "html_tailwind":
-        system_content = IMPORTED_CODE_TAILWIND_SYSTEM_PROMPT
-    elif stack == "react_tailwind":
-        system_content = IMPORTED_CODE_REACT_TAILWIND_SYSTEM_PROMPT
-    elif stack == "bootstrap":
+    if stack == "bootstrap":
         system_content = IMPORTED_CODE_BOOTSTRAP_SYSTEM_PROMPT
+    elif stack == "html_tailwind":
+        system_content = IMPORTED_CODE_TAILWIND_SYSTEM_PROMPT
     elif stack == "ionic_tailwind":
         system_content = IMPORTED_CODE_IONIC_TAILWIND_SYSTEM_PROMPT
+    elif stack == "react_tailwind":
+        system_content = IMPORTED_CODE_REACT_TAILWIND_SYSTEM_PROMPT
     elif stack == "svg":
         system_content = IMPORTED_CODE_SVG_SYSTEM_PROMPT
     else:
         raise Exception("Code config is not one of available options")
 
     user_content = (
-        "Here is the code of the app: " + code
+        f"Here is the code of the app: {code}"
         if stack != "svg"
-        else "Here is the code of the SVG: " + code
+        else f"Here is the code of the SVG: {code}"
     )
     return [
         {
