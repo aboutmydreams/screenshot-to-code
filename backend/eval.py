@@ -12,7 +12,7 @@ from llm import stream_openai_response
 from prompts import assemble_prompt
 import asyncio
 
-from utils import pprint_prompt
+from utils import print_prompt
 
 
 async def generate_code_core(image_url: str, stack: str) -> str:
@@ -20,7 +20,7 @@ async def generate_code_core(image_url: str, stack: str) -> str:
     openai_api_key = os.environ.get("OPENAI_API_KEY")
     openai_base_url = None
 
-    pprint_prompt(prompt_messages)
+    print_prompt(prompt_messages)
 
     async def process_chunk(content: str):
         pass

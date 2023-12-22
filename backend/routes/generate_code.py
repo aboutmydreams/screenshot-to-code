@@ -13,7 +13,7 @@ from access_token import validate_access_token
 from datetime import datetime
 import json
 
-from utils import pprint_prompt  # type: ignore
+from utils import print_prompt  # type: ignore
 
 
 router = APIRouter()
@@ -184,7 +184,7 @@ async def stream_code(websocket: WebSocket):
 
             image_cache = create_alt_url_mapping(params["history"][-2])
 
-    pprint_prompt(prompt_messages)
+    print_prompt(prompt_messages)
 
     if SHOULD_MOCK_AI_RESPONSE:
         completion = await mock_completion(process_chunk)

@@ -4,7 +4,7 @@ from typing import List
 from openai.types.chat import ChatCompletionMessageParam
 
 
-def pprint_prompt(prompt_messages: List[ChatCompletionMessageParam]):
+def print_prompt(prompt_messages: List[ChatCompletionMessageParam]):
     print(json.dumps(truncate_data_strings(prompt_messages), indent=4))
 
 
