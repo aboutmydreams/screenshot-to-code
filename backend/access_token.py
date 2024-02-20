@@ -17,5 +17,4 @@ async def validate_access_token(access_code: str):
         headers = {"Content-Type": "application/json"}
 
         response = await client.post(url, content=data, headers=headers)
-        response_data = response.json()
-        return response_data
+        return response.json()
